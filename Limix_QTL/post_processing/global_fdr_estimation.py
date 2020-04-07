@@ -1,4 +1,5 @@
 import glob
+import pdb
 import os.path
 import pandas as pd
 import argparse
@@ -32,13 +33,13 @@ def add_global_fdr_measures(QTL_Dir, OutputDir, relevantGenes, qtl_results_file=
         QTL_Dir = QTL_Dir[:-1]
     if OutputDir[-1:] == "/" :
         OutputDir = OutputDir[:-1]
-    
+
     if relevantGenes is not None :
         genesToParse = pd.read_csv(relevantGenes, header=None)[0].values
         toRead = set(QTL_Dir+"/Permutation.pValues."+genesToParse+".txt")
-    
+
     permutationInformtionToProcess = (glob.glob(QTL_Dir+"/Permutation.pValues.*.txt"))
-    
+
     if relevantGenes is not None :
         permutationInformtionToProcess = set(permutationInformtionToProcess).intersection(toRead)
     pValueBuffer = []
@@ -48,19 +49,19 @@ def add_global_fdr_measures(QTL_Dir, OutputDir, relevantGenes, qtl_results_file=
         pValueBuffer.extend(np.loadtxt(file))
         genesTested +=1
     nPerm = len(pValueBuffer)/genesTested
-    
+
     pValueBuffer=np.float_(pValueBuffer)
     alpha_para, beta_para = estimate_beta_function_paras(pValueBuffer)
     beta_dist_mm = scipy.stats.beta(alpha_para,beta_para)
     correction_function_beta = lambda x: beta_dist_mm.cdf(x)
-    
+
     qtlResults = pd.read_table(QTL_Dir+"/"+qtl_results_file,sep='\t')
-    
+
     if relevantGenes is not None :
         qtlResults = qtlResults.loc[qtlResults['feature_id'].isin(genesToParse)]
-    
+
     qtlResults['empirical_global_p_value'] = correction_function_beta(qtlResults["p_value"])
-    
+
     fdrBuffer = []
     for p in qtlResults["p_value"] :
         fdrBuffer.append(correction_function_fdr(p , pValueBuffer, nPerm))
@@ -82,11 +83,8 @@ if __name__=='__main__':
     outputDir = args.ouput_dir
     relevantGenes = args.gene_selection
     qtlFileName = args.qtl_filename
-    
+
     if qtlFileName is not None :
         add_global_fdr_measures(inputDir, outputDir, relevantGenes, qtlFileName)
     else :
         add_global_fdr_measures(inputDir, outputDir, relevantGenes)
-
-
-

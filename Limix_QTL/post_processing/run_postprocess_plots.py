@@ -3,10 +3,11 @@ import numpy as np
 import pandas
 import argparse
 
-#sys.path.append('../../hipsci_pipeline/post-processing_QTL/')
+sys.path.append('/home/hoeps/Programs/limix_qtl/Limix_QTL/post_processing/scripts/')
+sys.path.append('/home/hoeps/Programs/limix_qtl/Limix_QTL/post_processing/')
 
-from scripts.postprocess_functions_genome_results import *
-from scripts.postprocess_functions_plots import *
+from postprocess_functions_genome_results import *
+from postprocess_functions_plots import *
 
 
 def get_args():
@@ -21,7 +22,7 @@ def get_args():
     parser.add_argument('-p_value_field',required=False,default='p_value')
     parser.add_argument('-local_adjustment_method',required=False,default=None)
     args = parser.parse_args()
-    
+
     return args
 
 
@@ -33,7 +34,7 @@ if __name__=='__main__':
     path_data =args.path_data
     folder_destination = args.folder_destination if args.folder_destination is not None else path_data
     traits =args.traits.split(',')
-    
+
     run_type= args.run_type  if args.run_type is not None else ''
     chromosomes = args.chromosomes.split(',')
     trait_labels =args.trait_labels.split(',') if args.trait_labels is not None else traits
@@ -51,15 +52,15 @@ if __name__=='__main__':
 
 if 'summary' in run_type:
     print('create summary')
-    for trait in traits:
-        summary_gene_feature(output_file='qtl_results_genome', feature_report='ensembl_gene_id', chr_list=chromosomes,\
-                             p_value_field=p_value_field,p_value_raw_field='p_value', path_data=path_data,trait=trait,local_adjustment_method=local_adjustment_method)
+    #for trait in traits:
+    summary_gene_feature(output_file='qtl_results_genome', feature_report='ensembl_gene_id', chr_list=chromosomes,\
+                             p_value_field=p_value_field,p_value_raw_field='p_value', path_data=path_data,local_adjustment_method=local_adjustment_method)
 
 elif 'feature_snp'in run_type:
     print('create summary')
     for trait in traits:
         summary_gene_feature_snp(output_file='qtl_results_genome_feature_snp', feature_report='ensembl_gene_id',chr_list=chromosomes,path_data=path_data,trait=trait,thr=0.5)
-    
+
 elif 'plots' not in run_type:
     print ('run only summary')
     sys.exit()
@@ -94,12 +95,12 @@ if 'replication_pv' in run_type:
                 results_genome_file='qtl_results_genome',    feature_report='ensembl_gene_id',\
                 folder_destination=folder_destination+'Images_pipeline/', figsize=6,red_dots_features=None, \
                 p_value_field=p_value_field,thr=0.01)
-    
+
     names=['empirical_feature_p_value', 'replicated_p_value', 'replicated_self_p_value','beta', 'replicated_beta', 'feature_id', 'gene_name', 'snp_id', 'chromosome', 'strand', 'position', 'ensembl_gene_id']
     df= pandas.DataFrame(data=np.array([rez_pro_pep[key] for key in names ]).T, index=rez_pro_pep['ensembl_gene_id'],columns=names)
     df.to_csv(path_or_buf=path_data+traits[0]+'_'+traits[1]+'_qtl_results.txt',mode='w', sep='\t', columns=None, header=True, index=True)
     pandas.DataFrame(df['snp_id'][df['empirical_feature_p_value'].values.astype(float)<0.01]).to_csv(path_or_buf=path_data+traits[0]+'_qtl_results_significant_snps.txt',mode='w', sep='\t', columns=None, header=False, index=False)
-     
+
 #    genes1=df.index[(df['p_value'].values.astype(float)<10**-4)&(df['replicated_p_value'].values.astype(float)<10**-4)]
 #print (genes1.shape)
 
@@ -114,7 +115,3 @@ if 'manhattan' in run_type:
                  qtl_results_file='qtl_results_',colors=np.array(['black','green','orange','blue']),p_value_field=p_value_field, figsize=4)
 
 #        plt.show()
-
-
-
-    

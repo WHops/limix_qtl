@@ -37,12 +37,12 @@ def test_QTL_analysis():
     min_hwe_P=0.001
     min_call_rate =0.95
     blocksize = 1000
-    output_dir = data_path+'limix_QTL_results_kinship_covs/'
+    output_dir = data_path+'2_limix_QTL_results_kinship_covs/'
     randomSeed = 73
     genetic_range = '1'
-    
+
     ws = 2500000
-    
+
     run_QTL_analysis(pheno_filename, anno_filename, geno_prefix, True, output_dir, ws,
                      min_maf, min_hwe_P, min_call_rate, blocksize, cis_mode=True,
                      seed=randomSeed, n_perm=100, snps_filename=None, feature_filename = None,
@@ -51,7 +51,7 @@ def test_QTL_analysis():
 
     #results_checking_dict = {output_dir+'qtl_results_1.h5':-0.015720008359251764}
     #results_checking(results_checking_dict)
-    
+
     output_dir = data_path+'limix_QTL_results_kinship_covs_cmd_line/'
     subprocess.call('python run_QTL_analysis.py '
                     '--plink {geno_prefix} '
@@ -107,15 +107,15 @@ def test_QTL_analysis():
 
 
     #run another test case
-    
+
     geno_prefix = data_path+'Genotypes/Geuvadis'
     pheno_filename = data_path+'Expression/Geuvadis_CEU_Expr.txt'
     anno_filename = data_path+'Expression/Geuvadis_CEU_Annot.txt'
-    
+
     output_dir = data_path+'TestOutput/limix_QTL_results/'
-        
+
     ws = 250000
-    
+
     for chromosome in ['1','2']:
         run_QTL_analysis(pheno_filename,anno_filename,geno_prefix,True,output_dir,ws,min_maf, min_hwe_P,min_call_rate,blocksize,cis_mode=True, seed=randomSeed, n_perm=50,chromosome=chromosome)
 

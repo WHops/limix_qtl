@@ -1,0 +1,2 @@
+feature_id	chromosome	start	end	n_samples	n_e_samples	alpha_param	beta_param
+ENSG00000225234	2	3485013	3486180	90	90	114.98992404364988	65479.074735477014

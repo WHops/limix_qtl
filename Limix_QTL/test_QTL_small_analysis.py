@@ -26,10 +26,10 @@ def results_checking(results_checking_dict,error_tolerance=1e-6):
 
 def test_QTL_analysis():
     '''Run a set of test cases'''
-    data_path = '../geuvadis_CEU_test_data/'
+    data_path = 'test_data/'
     covariates_filename = data_path+'Expression/Geuvadis_CEU_YRI_covariates.txt'
     geno_prefix = data_path+'Genotypes/Geuvadis'
-    pheno_filename = data_path+'Expression/Geuvadis_CEU_YRI_Expr.txt.gz'
+    pheno_filename = data_path+'Expression/Geuvadis_CEU_YRI_Expr.txt'
     anno_filename = data_path+'Expression/Geuvadis_CEU_Annot_small.txt'
     kinship_filename= data_path+'Genotypes/Geuvadis_chr1_kinship.normalized.txt'
     individual2sample_filename = data_path + 'Geuvadis_CEU_gte.txt'
@@ -37,15 +37,15 @@ def test_QTL_analysis():
     min_hwe_P=0.001
     min_call_rate =0.95
     blocksize = 50
-    output_dir = data_path+'limix_QTL_results_kinship_covs/'
+    output_dir = data_path+'2_limix_QTL_results_kinship_covs/'
     randomSeed = 73
-    chromosome = '1'
-    
+    chromosome = '3'
+
     ws = 2500000
-    
+
     run_QTL_analysis(pheno_filename,anno_filename,geno_prefix,True,output_dir,ws,
                      min_maf, min_hwe_P, min_call_rate,
-                     blocksize,cis_mode=True, seed=randomSeed, n_perm=100, snps_filename=None,feature_filename = None,
+                     blocksize,cis_mode=True, seed=randomSeed, n_perm=2, snps_filename=None,feature_filename = None,
                      genetic_range=chromosome,
                      covariates_filename=covariates_filename,
                      kinship_filename=kinship_filename, write_permutations = True,

@@ -17,7 +17,7 @@ if(length(args)==4){
 	filterFile= args[4]
 }
 
-qtlResults <- read.delim(paste(folder,"/top_qtl_results_all.txt",sep=""), as.is=T)
+qtlResults <- read.delim("/home/hoeps/Programs/limix_qtl/Limix_QTL/post_processing/miniprocqtl_results_1.txt", as.is=T)
 
 qtlResults <- qtlResults[order(qtlResults$empirical_feature_p_value, qtlResults$p_value),]
 qtlResults["QTL"] <- paste(qtlResults$feature_id,qtlResults$snp_id,sep = "-")
